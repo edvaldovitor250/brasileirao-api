@@ -3,6 +3,7 @@ package br.com.brasileirao_api.util;
 import br.com.brasileirao_api.dto.PartidaGoogleDTO;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +24,7 @@ public class ScrapingUtil {
     }
 
     public PartidaGoogleDTO obtemInformacoesPartida(String url) {
+
         PartidaGoogleDTO partida = new PartidaGoogleDTO();
 
         Document document = null;
@@ -36,9 +38,16 @@ public class ScrapingUtil {
             StatusPartida  statusPartida =  obtemStatusPartida(document);
             LOGGER.info("Status partidas: {}", statusPartida);
 
-            String tempoPartida = obtemTempoPartida(document);
-            LOGGER.info("Tempo partida: ", tempoPartida);
+            if (statusPartida != StatusPartida.PARTIDA_NAO_INICIADA){
+                String tempoPartida = obtemTempoPartida(document);
+                LOGGER.info("Tempo partida: ", tempoPartida);
+            }
 
+            String nomeEquipeCasa = recuperarNomeEquipeCasa(document);
+            LOGGER.info("Nome equipe Casa: {}",nomeEquipeCasa);
+
+            String nomeEquipeVisitante = recuperarNomeEquipeVisitante(document);
+            LOGGER.info("Nome equipe Casa: {}",nomeEquipeVisitante);
 
         } catch (IOException e) {
             LOGGER.error("Erro ao tentar conectar no GOOGLE COM JSOUP -> {}", e.getMessage(), e);
@@ -92,6 +101,20 @@ public class ScrapingUtil {
     public String corrigeTempoPartida(String tempo) {
         return tempo.contains("'") ? tempo.replace("'", "min") : tempo;
     }
+
+    public String recuperarNomeEquipe(Document document, String seletor) {
+        Element elemento = document.selectFirst(seletor);
+        return elemento != null ? elemento.select("span").text() : "";
+    }
+    public String recuperarNomeEquipeCasa(Document document) {
+        return recuperarNomeEquipe(document, "div[class=\"imso_mh__first-tn-ed imso_mh__tnal-cont imso-tnol\"]");
+    }
+
+    public String recuperarNomeEquipeVisitante(Document document) {
+        return recuperarNomeEquipe(document, "div[class=imso_mh__second-tn-ed imso_mh__tnal-cont imso-tnol]");
+    }
+
+
 
 
 
