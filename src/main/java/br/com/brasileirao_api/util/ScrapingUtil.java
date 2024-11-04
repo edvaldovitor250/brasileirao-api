@@ -90,14 +90,9 @@ public class ScrapingUtil {
     }
 
     public String corrigeTempoPartida(String tempo) {
-        if (tempo.contains("'")) {
-            return tempo.replace("'", "min");
-        } else if(tempo.contains("+")){
-            return tempo.replace(" ","").concat(" min");
-        } else {
-            return tempo;
-        }
+        return tempo.contains("'") ? tempo.replace("'", "min") : tempo;
     }
+
 
 
 
