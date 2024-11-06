@@ -1,6 +1,7 @@
 package br.com.brasileirao_api.util;
 
 import br.com.brasileirao_api.dto.PartidaGoogleDTO;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -41,6 +42,12 @@ public class ScrapingUtil {
             if (statusPartida != StatusPartida.PARTIDA_NAO_INICIADA){
                 String tempoPartida = obtemTempoPartida(document);
                 LOGGER.info("Tempo partida: ", tempoPartida);
+
+                Integer placarEquipeCasa = recuperarPlacarEquipeCasa(document);
+                LOGGER.info("Placar Casa: {}", placarEquipeCasa);
+
+                Integer placarEquipeVisitante = recuperarPlacarEquipeVisitante(document);
+                LOGGER.info("Placar Visitante: {}", placarEquipeVisitante);
             }
 
             String nomeEquipeCasa = recuperarNomeEquipeCasa(document);
@@ -133,6 +140,19 @@ public class ScrapingUtil {
 
             return urlLogo;
         }
+
+    public Integer recuperarPlacarEquipeCasa(Document document) {
+        Element placarElemento = document.selectFirst("div.imso_mh__l-tm-sc.imso_mh__scr-it.imso-light-font");
+
+        return Integer.valueOf(String.valueOf(placarElemento));
+    }
+
+    public Integer recuperarPlacarEquipeVisitante(Document document) {
+        Element placarElemento = document.selectFirst("div.imso_mh__r-tm-sc.imso_mh__scr-it.imso-light-font");
+
+        return Integer.valueOf(String.valueOf(placarElemento));
+    }
+
     }
 
 
