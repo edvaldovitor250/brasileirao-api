@@ -49,6 +49,12 @@ public class ScrapingUtil {
             String nomeEquipeVisitante = recuperarNomeEquipeVisitante(document);
             LOGGER.info("Nome equipe Casa: {}",nomeEquipeVisitante);
 
+            String urlLogoEquipeCasa = reuperaLogoEquipeCasa(document);
+            LOGGER.info("Url logo equipe casa:{}",urlLogoEquipeCasa);
+
+            String urlLogoEquipeVisitante = reuperaLogoEquipeurlLogoEquipeVisitante(document);
+            LOGGER.info("Url logo equipe visitante:{}",urlLogoEquipeVisitante);
+
         } catch (IOException e) {
             LOGGER.error("Erro ao tentar conectar no GOOGLE COM JSOUP -> {}", e.getMessage(), e);
         }
@@ -114,10 +120,22 @@ public class ScrapingUtil {
         return recuperarNomeEquipe(document, "div[class=imso_mh__second-tn-ed imso_mh__tnal-cont imso-tnol]");
     }
 
+    public String reuperaLogoEquipeCasa(Document document) {
+        Element elemento = document.selectFirst("div[class=imso_mh__first-tn-ed imso_mh__tnal-cont imso-tnol]");
+            String urlLogo = "https:" + elemento.select("img.imso_btl_mh-logo").attr("src");
+
+            return urlLogo;
+        }
+
+        public String reuperaLogoEquipeurlLogoEquipeVisitante(Document document){
+        Element elemento = document.selectFirst("div[class=imso_mh__second-tn-ed imso_mh__tnal-cont imso-tnol]");
+            String urlLogo = "https:" + elemento.select("img.imso_btl_mh-logo").attr("src");
+
+            return urlLogo;
+        }
+    }
 
 
 
 
-
-}
 
