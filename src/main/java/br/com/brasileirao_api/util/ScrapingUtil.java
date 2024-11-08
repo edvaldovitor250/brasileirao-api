@@ -1,14 +1,16 @@
 package br.com.brasileirao_api.util;
 
 import br.com.brasileirao_api.dto.PartidaGoogleDTO;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ScrapingUtil {
 
@@ -17,31 +19,26 @@ public class ScrapingUtil {
     private static final String COMPLEMENTO_URL_GOOGLE  = "&hl=pt-BR";
 
     public static void main(String[] args) {
-
         String url = BASE_URL_GOOGLE + "flamengo+x+atlético" + COMPLEMENTO_URL_GOOGLE;
-
         ScrapingUtil scrapingUtil = new ScrapingUtil();
         scrapingUtil.obtemInformacoesPartida(url);
     }
 
     public PartidaGoogleDTO obtemInformacoesPartida(String url) {
-
         PartidaGoogleDTO partida = new PartidaGoogleDTO();
-
-        Document document = null;
+        Document document;
 
         try {
             document = Jsoup.connect(url).get();
-
             String title = document.title();
             LOGGER.info("Título da Página: {}", title);
 
-            StatusPartida  statusPartida =  obtemStatusPartida(document);
+            StatusPartida statusPartida = obtemStatusPartida(document);
             LOGGER.info("Status partidas: {}", statusPartida);
 
-            if (statusPartida != StatusPartida.PARTIDA_NAO_INICIADA){
+            if (statusPartida != StatusPartida.PARTIDA_NAO_INICIADA) {
                 String tempoPartida = obtemTempoPartida(document);
-                LOGGER.info("Tempo partida: ", tempoPartida);
+                LOGGER.info("Tempo partida: {}", tempoPartida);
 
                 Integer placarEquipeCasa = recuperarPlacarEquipeCasa(document);
                 LOGGER.info("Placar Casa: {}", placarEquipeCasa);
@@ -51,16 +48,22 @@ public class ScrapingUtil {
             }
 
             String nomeEquipeCasa = recuperarNomeEquipeCasa(document);
-            LOGGER.info("Nome equipe Casa: {}",nomeEquipeCasa);
+            LOGGER.info("Nome equipe Casa: {}", nomeEquipeCasa);
 
             String nomeEquipeVisitante = recuperarNomeEquipeVisitante(document);
-            LOGGER.info("Nome equipe Casa: {}",nomeEquipeVisitante);
+            LOGGER.info("Nome equipe Visitante: {}", nomeEquipeVisitante);
 
             String urlLogoEquipeCasa = reuperaLogoEquipeCasa(document);
-            LOGGER.info("Url logo equipe casa:{}",urlLogoEquipeCasa);
+            LOGGER.info("Url logo equipe casa: {}", urlLogoEquipeCasa);
 
-            String urlLogoEquipeVisitante = reuperaLogoEquipeurlLogoEquipeVisitante(document);
-            LOGGER.info("Url logo equipe visitante:{}",urlLogoEquipeVisitante);
+            String urlLogoEquipeVisitante = reuperaLogoEquipeVisitante(document);
+            LOGGER.info("Url logo equipe visitante: {}", urlLogoEquipeVisitante);
+
+            String golsEquipeCasa = recupaGolsEquipeCasa(document);
+            LOGGER.info("Gols equipe casa: {}", golsEquipeCasa);
+
+            String golsEquipeVisitante = recupaGolsEquipeVisitante(document);
+            LOGGER.info("Gols equipe visitante: {}", golsEquipeVisitante);
 
         } catch (IOException e) {
             LOGGER.error("Erro ao tentar conectar no GOOGLE COM JSOUP -> {}", e.getMessage(), e);
@@ -69,15 +72,14 @@ public class ScrapingUtil {
         return partida;
     }
 
-    public StatusPartida obtemStatusPartida(Document document){
-
+    public StatusPartida obtemStatusPartida(Document document) {
         StatusPartida statusPartida = StatusPartida.PARTIDA_NAO_INICIADA;
 
         boolean isTempoPartida = document.select("div[class=imso_mh_lv-m-stts-cont]").isEmpty();
-        if (!isTempoPartida){
+        if (!isTempoPartida) {
             String tempoPartida = document.select("div[class=imso_mh_lv-m-stts-cont]").first().text();
             statusPartida = StatusPartida.PARTIDA_EM_ANDAMENTO;
-            if (tempoPartida.contains("Pênaltis")){
+            if (tempoPartida.contains("Pênaltis")) {
                 statusPartida = StatusPartida.PARTIDA_PENALTIS;
             }
 
@@ -85,25 +87,23 @@ public class ScrapingUtil {
 
             isTempoPartida = document.select("span[class=imso_mh__ft-mtch imso-medium-font imso_mh__ft-mtchc]").isEmpty();
 
-            if (!isTempoPartida){
+            if (!isTempoPartida) {
                 statusPartida = StatusPartida.PARTIDA_ENCERRADA;
             }
         }
-        return  statusPartida;
-
+        return statusPartida;
     }
 
-    public String obtemTempoPartida(Document document){
+    public String obtemTempoPartida(Document document) {
         String tempoPartida = null;
 
         boolean isTempoPartida = document.select("div[class=imso_mh_lv-m-stts-cont]").isEmpty();
-
-        if (!isTempoPartida){
+        if (!isTempoPartida) {
             tempoPartida = document.select("div[class=imso_mh_lv-m-stts-cont]").first().text();
         }
 
         isTempoPartida = document.select("span[class=imso_mh__ft-mtch imso-medium-font imso_mh__ft-mtchc]").isEmpty();
-        if(!isTempoPartida){
+        if (!isTempoPartida) {
             tempoPartida = document.select("span[class=imso_mh__ft-mtch imso-medium-font imso_mh__ft-mtchc]").first().text();
         }
 
@@ -112,13 +112,14 @@ public class ScrapingUtil {
     }
 
     public String corrigeTempoPartida(String tempo) {
-        return tempo.contains("'") ? tempo.replace("'", "min") : tempo;
+        return tempo != null && tempo.contains("'") ? tempo.replace("'", "min") : tempo;
     }
 
     public String recuperarNomeEquipe(Document document, String seletor) {
         Element elemento = document.selectFirst(seletor);
         return elemento != null ? elemento.select("span").text() : "";
     }
+
     public String recuperarNomeEquipeCasa(Document document) {
         return recuperarNomeEquipe(document, "div[class=\"imso_mh__first-tn-ed imso_mh__tnal-cont imso-tnol\"]");
     }
@@ -129,33 +130,35 @@ public class ScrapingUtil {
 
     public String reuperaLogoEquipeCasa(Document document) {
         Element elemento = document.selectFirst("div[class=imso_mh__first-tn-ed imso_mh__tnal-cont imso-tnol]");
-            String urlLogo = "https:" + elemento.select("img.imso_btl_mh-logo").attr("src");
+        return elemento != null ? "https:" + elemento.select("img.imso_btl_mh-logo").attr("src") : "";
+    }
 
-            return urlLogo;
-        }
-
-        public String reuperaLogoEquipeurlLogoEquipeVisitante(Document document){
+    public String reuperaLogoEquipeVisitante(Document document) {
         Element elemento = document.selectFirst("div[class=imso_mh__second-tn-ed imso_mh__tnal-cont imso-tnol]");
-            String urlLogo = "https:" + elemento.select("img.imso_btl_mh-logo").attr("src");
-
-            return urlLogo;
-        }
+        return elemento != null ? "https:" + elemento.select("img.imso_btl_mh-logo").attr("src") : "";
+    }
 
     public Integer recuperarPlacarEquipeCasa(Document document) {
         Element placarElemento = document.selectFirst("div.imso_mh__l-tm-sc.imso_mh__scr-it.imso-light-font");
-
-        return Integer.valueOf(String.valueOf(placarElemento));
+        return placarElemento != null ? Integer.parseInt(placarElemento.text()) : null;
     }
 
     public Integer recuperarPlacarEquipeVisitante(Document document) {
         Element placarElemento = document.selectFirst("div.imso_mh__r-tm-sc.imso_mh__scr-it.imso-light-font");
-
-        return Integer.valueOf(String.valueOf(placarElemento));
+        return placarElemento != null ? Integer.parseInt(placarElemento.text()) : null;
     }
 
+    public String recupaGolsEquipeCasa(Document document) {
+        List<String> golsEquipe = new ArrayList<>();
+        Elements elementos = document.select("div.imso_gs__tgs.imso_gs__left-team").select("div.imso_gs__gs-r");
+        elementos.forEach(e -> golsEquipe.add(e.text()));
+        return String.join(", ", golsEquipe);
     }
 
-
-
-
-
+    public String recupaGolsEquipeVisitante(Document document) {
+        List<String> golsEquipe = new ArrayList<>();
+        Elements elementos = document.select("div.imso_gs__tgs.imso_gs__right-team").select("div.imso_gs__gs-r");
+        elementos.forEach(item -> golsEquipe.add(item.text()));
+        return String.join(", ", golsEquipe);
+    }
+}
