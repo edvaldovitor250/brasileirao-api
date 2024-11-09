@@ -18,8 +18,12 @@ public class ScrapingUtil {
     private static final String BASE_URL_GOOGLE = "https://www.google.com/search?q=";
     private static final String COMPLEMENTO_URL_GOOGLE  = "&hl=pt-BR";
 
+    private static final String CASA = "casa";
+    private static final String VISITANTE = "visitante";
+
+
     public static void main(String[] args) {
-        String url = BASE_URL_GOOGLE + "flamengo+x+atlético" + COMPLEMENTO_URL_GOOGLE;
+        String url = BASE_URL_GOOGLE + "brasil+e+uruguai+06/07/24" + COMPLEMENTO_URL_GOOGLE;
         ScrapingUtil scrapingUtil = new ScrapingUtil();
         scrapingUtil.obtemInformacoesPartida(url);
     }
@@ -45,6 +49,7 @@ public class ScrapingUtil {
 
                 Integer placarEquipeVisitante = recuperarPlacarEquipeVisitante(document);
                 LOGGER.info("Placar Visitante: {}", placarEquipeVisitante);
+
             }
 
             String nomeEquipeCasa = recuperarNomeEquipeCasa(document);
@@ -64,6 +69,12 @@ public class ScrapingUtil {
 
             String golsEquipeVisitante = recupaGolsEquipeVisitante(document);
             LOGGER.info("Gols equipe visitante: {}", golsEquipeVisitante);
+
+            Integer placarEstendidoEquipeCasa = buscarPenalidade(document,CASA);
+            LOGGER.info("placar estendido equipe casa: {}", placarEstendidoEquipeCasa);
+
+            Integer placarEstendidoEquipeVisitante = buscarPenalidade(document, VISITANTE);
+            LOGGER.info("placar estendido equipe visitante: {}", placarEstendidoEquipeVisitante);
 
         } catch (IOException e) {
             LOGGER.error("Erro ao tentar conectar no GOOGLE COM JSOUP -> {}", e.getMessage(), e);
@@ -161,4 +172,30 @@ public class ScrapingUtil {
         elementos.forEach(item -> golsEquipe.add(item.text()));
         return String.join(", ", golsEquipe);
     }
+
+    public Integer buscarPenalidade(Document document, String tipoEquipe){
+        boolean isPenalidades = document.select("div[class=imso_mh_s__psn-sc]").isEmpty();
+
+        if(!isPenalidades){
+            String penalidades = document.select("div[class=imso_mh_s__psn-sc]").text();
+            String penalidadesCompleta = penalidades.substring(0,5).replace(" ","");
+            String[] divisao = penalidadesCompleta.split("-");
+
+            return  tipoEquipe.equals(CASA) ? formataPlacarStringInteger(divisao[0]) : formataPlacarStringInteger(divisao[1]);
+
+        }
+
+        return null;
+    }
+
+    public Integer formataPlacarStringInteger(String placar){
+        Integer valor;
+        try {
+            valor =  Integer.parseInt(placar);
+        } catch (Exception e){
+            valor = 0;
+        }
+        return valor;
+    }
+
 }
