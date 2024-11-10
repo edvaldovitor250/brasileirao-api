@@ -1,4 +1,4 @@
-package br.com.brasileirao_api.dto;
+package br.com.brasileirao_api.dto.partida;
 
 import lombok.*;
 

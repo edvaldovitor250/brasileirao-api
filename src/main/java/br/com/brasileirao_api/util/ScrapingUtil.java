@@ -1,6 +1,6 @@
 package br.com.brasileirao_api.util;
 
-import br.com.brasileirao_api.dto.PartidaGoogleDTO;
+import br.com.brasileirao_api.dto.partida.PartidaGoogleDTO;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
