@@ -30,12 +30,13 @@ public class PartidaTask {
     }
 
     private void inicializaAgendamento(String descricaoTarefa) {
-        this.gravaLogInfo(String.format("Inicializando agendamento: %s às %s",
+        gravaLogInfo(String.format("Inicializando agendamento: %s às %s",
                 descricaoTarefa, DataUtil.formatarDateEmString(new Date(), DD_MM_YY_HH_MM_SS)));
-        scrapingService.verificaPartidaPeriodo();
     }
 
     private void gravaLogInfo(String mensagem) {
         LOGGER.info(mensagem);
     }
+
+
 }

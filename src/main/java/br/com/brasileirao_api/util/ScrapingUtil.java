@@ -18,78 +18,36 @@ public class ScrapingUtil {
 
 
     public PartidaGoogleDTO obtemInformacoesPartida(String url) {
-        PartidaGoogleDTO partida = new PartidaGoogleDTO();
-
-        Document document;
-
         PartidaGoogleDTO partidaDTO = new PartidaGoogleDTO();
-
         try {
             LOGGER.info(url);
-            document = Jsoup.connect(url).get();
-
+            Document document = Jsoup.connect(url).get();
             String title = document.title();
             LOGGER.info(title);
-
 
             StatusPartida statusPartida = obtemStatusPartida(document);
             partidaDTO.setStatusPartida(statusPartida);
             LOGGER.info("Status partidas: {}", statusPartida);
 
             if (statusPartida != StatusPartida.PARTIDA_NAO_INICIADA) {
-
-                String tempoPartida = obtemTempoPartida(document);
-                LOGGER.info("Tempo partida: {}", tempoPartida);
-                partidaDTO.setTempoPartida(tempoPartida);
-
-                Integer placarEquipeCasa = recuperaPlacarEquipe(document, ScrapingConstants.PLACAR_EQUIPE_CASA);
-                LOGGER.info("Placar Casa: {}", placarEquipeCasa);
-                partidaDTO.setPlacarEquipeCasa(placarEquipeCasa);
-
-
-                Integer placarEquipeVisitante = recuperaPlacarEquipe(document, ScrapingConstants.PLACAR_EQUIPE_VISITANTE);
-                LOGGER.info("Placar Visitante: {}", placarEquipeVisitante);
-                partidaDTO.setPlacarEquipeVisitante(placarEquipeVisitante);
-
-                String golsEquipeCasa = recuperaGolsEquipe(document, ScrapingConstants.GOLS_EQUIPE_CASA);
-                LOGGER.info("Gols equipe casa: {}", golsEquipeCasa);
-                partidaDTO.setGolsEquipeCasa(golsEquipeCasa);
-
-                String golsEquipeVisitante = recuperaGolsEquipe(document, ScrapingConstants.GOLS_EQUIPE_VISITANTE);
-                LOGGER.info("Gols equipe visitante: {}", golsEquipeVisitante);
-                partidaDTO.setGolsEquipeVisitante(golsEquipeVisitante);
+                partidaDTO.setTempoPartida(obtemTempoPartida(document));
+                partidaDTO.setPlacarEquipeCasa(recuperaPlacarEquipe(document, ScrapingConstants.PLACAR_EQUIPE_CASA));
+                partidaDTO.setPlacarEquipeVisitante(recuperaPlacarEquipe(document, ScrapingConstants.PLACAR_EQUIPE_VISITANTE));
+                partidaDTO.setGolsEquipeCasa(recuperaGolsEquipe(document, ScrapingConstants.GOLS_EQUIPE_CASA));
+                partidaDTO.setGolsEquipeVisitante(recuperaGolsEquipe(document, ScrapingConstants.GOLS_EQUIPE_VISITANTE));
             }
 
-            String nomeEquipeCasa = recuperaNomeEquipe(document, ScrapingConstants.LOGO_EQUIPE_CASA);
-            LOGGER.info("Nome equipe Casa: {}", nomeEquipeCasa);
-            partidaDTO.setNomeEquipeCasa(nomeEquipeCasa);
+            partidaDTO.setNomeEquipeCasa(recuperaNomeEquipe(document, ScrapingConstants.LOGO_EQUIPE_CASA));
+            partidaDTO.setNomeEquipeVisitante(recuperaNomeEquipe(document, ScrapingConstants.LOGO_EQUIPE_VISITANTE));
+            partidaDTO.setUrlLogoEquipeCasa(reuperaLogoEquipe(document, ScrapingConstants.LOGO_EQUIPE_CASA));
+            partidaDTO.setUrlLogoEquipeVisitante(reuperaLogoEquipe(document, ScrapingConstants.LOGO_EQUIPE_VISITANTE));
+            partidaDTO.setPlacarEstendidoEquipeCasa(String.valueOf(buscarPenalidade(document, ScrapingConstants.CASA)));
+            partidaDTO.setPlacarEstendidoEquipeVisitante(String.valueOf(buscarPenalidade(document, ScrapingConstants.VISITANTE)));
 
-            String nomeEquipeVisitante = recuperaNomeEquipe(document, ScrapingConstants.LOGO_EQUIPE_VISITANTE);
-            LOGGER.info("Nome equipe Visitante: {}", nomeEquipeVisitante);
-            partidaDTO.setNomeEquipeVisitante(nomeEquipeVisitante);
-
-            String urlLogoEquipeCasa = reuperaLogoEquipe(document, ScrapingConstants.LOGO_EQUIPE_CASA);
-            LOGGER.info("Url logo equipe casa: {}", urlLogoEquipeCasa);
-            partidaDTO.setUrlLogoEquipeCasa(urlLogoEquipeCasa);
-
-            String urlLogoEquipeVisitante = reuperaLogoEquipe(document, ScrapingConstants.LOGO_EQUIPE_VISITANTE);
-            LOGGER.info("Url logo equipe visitante: {}", urlLogoEquipeVisitante);
-            partidaDTO.setUrlLogoEquipeVisitante(urlLogoEquipeVisitante);
-
-            Integer placarEstendidoEquipeCasa = buscarPenalidade(document, ScrapingConstants.CASA);
-            LOGGER.info("placar estendido equipe casa: {}", placarEstendidoEquipeCasa);
-            partidaDTO.setPlacarEstendidoEquipeCasa(String.valueOf(placarEstendidoEquipeCasa));
-
-            Integer placarEstendidoEquipeVisitante = buscarPenalidade(document, ScrapingConstants.VISITANTE);
-            LOGGER.info("placar estendido equipe visitante: {}", placarEstendidoEquipeVisitante);
-            partidaDTO.setPlacarEstendidoEquipeVisitante(String.valueOf(placarEstendidoEquipeVisitante));
-
-
-        }  catch (IOException e) {
-            LOGGER.error(e.getMessage());
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage(), e);
             return null;
         }
-
         return partidaDTO;
     }
 
