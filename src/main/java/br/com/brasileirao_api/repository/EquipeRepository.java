@@ -7,9 +7,9 @@ import java.util.Optional;
 
 public interface EquipeRepository extends JpaRepository<Equipe, Long> {
 
-    public Optional<Equipe> findByNomeEquipe(String nomeEquipe);
+     Optional<Equipe> findByNomeEquipe(String nomeEquipe);
 
-    public boolean existsByNomeEquipe(String nomeEquipe);
+     boolean existsByNomeEquipe(String nomeEquipe);
 
 
 }
