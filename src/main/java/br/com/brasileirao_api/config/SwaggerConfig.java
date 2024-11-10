@@ -1,36 +1,24 @@
 package br.com.brasileirao_api.config;
 
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.Contact;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
-@EnableSwagger2
-public class SwaggerConfig {
+public class SwaggerConfig  {
 
     @Bean
-    public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("br.com.brasileirao_api.controller"))
-                .paths(PathSelectors.any())
-                .build()
-                .apiInfo(apiDetails());
-    }
-
-    private ApiInfo apiDetails() {
-        return new ApiInfoBuilder()
-                .title("Brasileirao API - Scraping")
-                .description("API REST que obtem dados de partidas do Brasileirão em tempo real")
-                .version("1.0.0")
-                .contact(new Contact("Edvaldo Vitor De Castro Souza", "https://github.com/edvaldovitor250", "edvaldovitor250@gmail.com"))
-                .build();
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("Brasileirao API - Scraping")
+                        .description("API REST que obtem dados de partidas do Brasileirão em tempo real")
+                        .version("1.0.0")
+                        .contact(new Contact()
+                                .name("Edvaldo Vitor De Castro Souza")
+                                .url("https://github.com/edvaldovitor250")
+                                .email("edvaldovitor250@gmail.com")));
     }
 }
