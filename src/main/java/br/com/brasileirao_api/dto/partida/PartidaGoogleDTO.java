@@ -1,5 +1,6 @@
 package br.com.brasileirao_api.dto.partida;
 
+import br.com.brasileirao_api.util.StatusPartida;
 import lombok.*;
 
 import java.io.Serializable;
@@ -9,7 +10,7 @@ public class PartidaGoogleDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String statusPartida;
+    private StatusPartida statusPartida;
     private String tempoPartida;
 
     private String nomeEquipeCasa;

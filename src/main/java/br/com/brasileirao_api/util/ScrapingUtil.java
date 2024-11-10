@@ -6,11 +6,12 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
+@Component
 public class ScrapingUtil {
 
     private static final Logger LOGGER = ScrapingConstants.LOGGER;
@@ -32,7 +33,7 @@ public class ScrapingUtil {
 
 
             StatusPartida statusPartida = obtemStatusPartida(document);
-            partidaDTO.setStatusPartida(String.valueOf(statusPartida));
+            partidaDTO.setStatusPartida(statusPartida);
             LOGGER.info("Status partidas: {}", statusPartida);
 
             if (statusPartida != StatusPartida.PARTIDA_NAO_INICIADA) {

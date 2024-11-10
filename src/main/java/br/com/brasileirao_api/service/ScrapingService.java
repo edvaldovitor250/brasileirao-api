@@ -3,6 +3,7 @@ package br.com.brasileirao_api.service;
 import br.com.brasileirao_api.dto.partida.PartidaGoogleDTO;
 import br.com.brasileirao_api.model.Partida;
 import br.com.brasileirao_api.util.ScrapingUtil;
+import br.com.brasileirao_api.util.StatusPartida;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,11 @@ public class ScrapingService {
                 PartidaGoogleDTO partidaGoogle = scrapingUtil.obtemInformacoesPartida(urlPartida);
 
                 partidaService.atualizaPartida(partida,partidaGoogle);
+
+                if (partidaGoogle.getStatusPartida() != StatusPartida.PARTIDA_NAO_INICIADA){
+                    partidaService.atualizaPartida(partida,partidaGoogle);
+
+                }
 
             });
         }
