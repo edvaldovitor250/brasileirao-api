@@ -1,4 +1,4 @@
-package br.com.brasileirao_api.modal;
+package br.com.brasileirao_api.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package br.com.brasileirao_api.modal;
+package br.com.brasileirao_api.model;
 
 import io.swagger.annotations.ApiModelProperty;
 import jakarta.persistence.*;
