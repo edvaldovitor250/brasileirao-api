@@ -11,7 +11,7 @@
 	<groupId>br.com.edvaldo</groupId>
 	<artifactId>berasileirao-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>berasileirao-api</name>
+	<name>brasileirao-api</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
@@ -64,12 +64,6 @@
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>1.18.34</version>
-			<scope>provided</scope>
-		</dependency>
 
 		<dependency>
 			<groupId>io.swagger</groupId>
@@ -88,6 +82,12 @@
 			<artifactId>jsoup</artifactId>
 			<version>1.16.1</version>
 		</dependency>
+		<dependency>
+		<groupId>org.projectlombok</groupId>
+		<artifactId>lombok</artifactId>
+		<version>1.18.34</version>
+		<scope>provided</scope>
+	</dependency>
 
 	</dependencies>
 

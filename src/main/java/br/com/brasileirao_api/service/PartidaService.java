@@ -1,6 +1,7 @@
 package br.com.brasileirao_api.service;
 
 import br.com.brasileirao_api.dto.partida.PartidaDTO;
+import br.com.brasileirao_api.dto.partida.PartidaGoogleDTO;
 import br.com.brasileirao_api.dto.partida.PartidaResponseDTO;
 import br.com.brasileirao_api.exception.BadRequestException;
 import br.com.brasileirao_api.exception.NotFoundException;
@@ -11,6 +12,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 @AllArgsConstructor
 @Service
@@ -62,4 +65,24 @@ public class PartidaService {
         return partidaRepository.save(partida);
     }
 
+
+    public void atualizaPartida(Partida partida, PartidaGoogleDTO partidaGoogle) {
+        partida.setPlacarEquipeCasa(partidaGoogle.getPlacarEquipeCasa());
+        partida.setPlacarEquipeVisitante(partidaGoogle.getPlacarEquipeVisitante());
+        partida.setGolsEquipeCasa(partidaGoogle.getGolsEquipeCasa());
+        partida.setGolsEquipeVisitante(partidaGoogle.getGolsEquipeVisitante());
+        partida.setPlacarEstendidoEquipeCasa(Integer.valueOf(partidaGoogle.getPlacarEstendidoEquipeCasa()));
+        partida.setPlacarEstendidoEquipeVisitante(Integer.valueOf(partidaGoogle.getPlacarEstendidoEquipeVisitante()));
+        partida.setTempoPartida(partidaGoogle.getTempoPartida());
+
+        salvarPartida(partida);
+    }
+
+    public List<Partida> listarPartidasPeriodo() {
+        return partidaRepository.listarPartidasPeriodo();
+    }
+
+    public Integer buscarQuantidadePartidasPeriodo() {
+        return  partidaRepository.buscarQuantidadePartidasPeriodo();
+    }
 }
