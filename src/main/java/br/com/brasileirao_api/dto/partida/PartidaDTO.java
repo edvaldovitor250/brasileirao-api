@@ -28,9 +28,9 @@ public class PartidaDTO {
     @NotBlank
     private String localPartida;
 
-    @NotNull
-    @ApiModelProperty(example = "dd/mm/yyyy hh:mm")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm", timezone = "America/Sao_Paulo")
+    @ApiModelProperty(example = "dd/MM/yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone = "America/Sao_Paulo")
     private Date dataHoraPartida;
+
 
 }

@@ -55,9 +55,9 @@ public class Partida implements Serializable {
     @Column(name = "placar_estendido_equipe_visitante")
     private Integer placarEstendidoEquipeVisitante;
 
-    @ApiModelProperty(example = "dd/MM/yyyy HH:mm")
-    @JsonFormat(pattern = "dd/MM/yyyy HH:mm", timezone = "America/Sao_Paulo")
-    @Temporal(TemporalType.TIMESTAMP)
+    @ApiModelProperty(example = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy", timezone = "America/Sao_Paulo")
+    @Temporal(TemporalType.DATE)
     @Column(name = "data_hora_partida")
     private Date dataHoraPartida;
 

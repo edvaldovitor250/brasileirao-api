@@ -19,8 +19,7 @@ public class PartidaTask {
     private static final Logger LOGGER = LoggerFactory.getLogger(PartidaTask.class);
 
     private static final String TIME_ZONE = "America/Sao_Paulo";
-    private static final String DD_MM_YY_HH_MM_SS = "dd/MM/yyyy HH:mm:ss";
-
+    private static final String DD_MM_YY = "dd/MM/yyyy";
     private final ScrapingService scrapingService;
 
     @Scheduled(cron = "*/30 * * * * *", zone = TIME_ZONE)
@@ -30,8 +29,8 @@ public class PartidaTask {
     }
 
     private void inicializaAgendamento(String descricaoTarefa) {
-        gravaLogInfo(String.format("Inicializando agendamento: %s às %s",
-                descricaoTarefa, DataUtil.formatarDateEmString(new Date(), DD_MM_YY_HH_MM_SS)));
+        gravaLogInfo(String.format("Inicializando agendamento: %s em %s",
+                descricaoTarefa, DataUtil.formatarDateEmString(new Date(), DD_MM_YY)));
     }
 
     private void gravaLogInfo(String mensagem) {
