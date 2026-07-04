@@ -6,13 +6,11 @@ import br.com.brasileirao_api.exception.StandardError;
 import br.com.brasileirao_api.model.Equipe;
 import br.com.brasileirao_api.model.Partida;
 import br.com.brasileirao_api.service.PartidaService;
-import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.servlet.http.Part;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +19,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
-@Api("API de partidas")
 @RestController
 @RequestMapping("/api/v1/partidas")
 @AllArgsConstructor

@@ -1,22 +1,25 @@
 package br.com.brasileirao_api.util;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-public class DataUtil {
+public final class DataUtil {
 
-    public static String formatarDateEmString(Date data, String mask) {
+    private DataUtil() {
+    }
+
+    private static final Locale LOCALE_PT_BR = new Locale("pt", "BR");
+
+    public static String formatarDateEmString(LocalDate data, String mask) {
         if (data == null) {
             return "";
         }
         try {
-            DateFormat formatter = new SimpleDateFormat(mask, new Locale("pt", "BR"));
-            return formatter.format(data);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(mask, LOCALE_PT_BR);
+            return data.format(formatter);
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("Máscara de formatação inválida: " + mask, e);
         }
     }
-
 }

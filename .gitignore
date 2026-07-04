@@ -31,3 +31,31 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Environment / Secrets ###
+application.properties
+application-*.properties
+*.env
+.env*
+
+### Logs ###
+*.log
+
+### H2 Database files ###
+*.db
+*.mv.db
+*.trace.db
+
+
+application.properties
+application-*.properties
+*.env
+.env*
+
+# Logs
+*.log
+
+# H2 database files
+*.db
+*.mv.db
+*.trace.db

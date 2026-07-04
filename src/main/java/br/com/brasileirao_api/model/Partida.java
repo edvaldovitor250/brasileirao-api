@@ -1,15 +1,14 @@
 package br.com.brasileirao_api.model;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -55,11 +54,9 @@ public class Partida implements Serializable {
     @Column(name = "placar_estendido_equipe_visitante")
     private Integer placarEstendidoEquipeVisitante;
 
-    @ApiModelProperty(example = "dd/MM/yyyy")
-    @JsonFormat(pattern = "dd/MM/yyyy", timezone = "America/Sao_Paulo")
-    @Temporal(TemporalType.DATE)
+    @Schema(example = "yyyy-MM-dd")
     @Column(name = "data_hora_partida")
-    private Date dataHoraPartida;
+    private LocalDate dataHoraPartida;
 
     @Column(name = "local_partida")
     private String localPartida;

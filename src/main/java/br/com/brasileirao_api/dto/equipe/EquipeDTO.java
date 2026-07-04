@@ -14,7 +14,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class EquipeDTO implements Serializable {
 
-    private static  final long seralVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     @NotBlank
     private String nomeEquipe;

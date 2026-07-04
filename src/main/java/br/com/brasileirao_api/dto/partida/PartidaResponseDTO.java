@@ -16,7 +16,7 @@ import java.util.List;
 public class PartidaResponseDTO implements Serializable {
 
 
-    private static  final long seralVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
 
     private List<Partida> partidas;

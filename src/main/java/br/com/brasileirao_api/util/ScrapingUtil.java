@@ -39,8 +39,8 @@ public class ScrapingUtil {
 
             partidaDTO.setNomeEquipeCasa(recuperaNomeEquipe(document, ScrapingConstants.LOGO_EQUIPE_CASA));
             partidaDTO.setNomeEquipeVisitante(recuperaNomeEquipe(document, ScrapingConstants.LOGO_EQUIPE_VISITANTE));
-            partidaDTO.setUrlLogoEquipeCasa(reuperaLogoEquipe(document, ScrapingConstants.LOGO_EQUIPE_CASA));
-            partidaDTO.setUrlLogoEquipeVisitante(reuperaLogoEquipe(document, ScrapingConstants.LOGO_EQUIPE_VISITANTE));
+            partidaDTO.setUrlLogoEquipeCasa(recuperaLogoEquipe(document, ScrapingConstants.LOGO_EQUIPE_CASA));
+            partidaDTO.setUrlLogoEquipeVisitante(recuperaLogoEquipe(document, ScrapingConstants.LOGO_EQUIPE_VISITANTE));
             partidaDTO.setPlacarEstendidoEquipeCasa(String.valueOf(buscarPenalidade(document, ScrapingConstants.CASA)));
             partidaDTO.setPlacarEstendidoEquipeVisitante(String.valueOf(buscarPenalidade(document, ScrapingConstants.VISITANTE)));
 
@@ -109,22 +109,32 @@ public class ScrapingUtil {
 
     public String recuperaNomeEquipe(Document document, String itemHtml) {
         Element elementNomeEquipe = document.select(itemHtml).first();
+        if (elementNomeEquipe == null) {
+            return "";
+        }
         return elementNomeEquipe.select(ScrapingConstants.SPAN).text();
     }
 
-    public String reuperaLogoEquipe(Document document, String itemHtml) {
+    public String recuperaLogoEquipe(Document document, String itemHtml) {
         Element elemento = document.selectFirst(itemHtml);
         return elemento != null ? ScrapingConstants.HTTP + elemento.select(ScrapingConstants.ITEM_LOGO).attr(ScrapingConstants.SRC) : "";
     }
 
     public Integer recuperaPlacarEquipe(Document document, String itemHtml) {
-        String placarEquipe = document.select(itemHtml).first().text();
-        return formataPlacarStringInteger(placarEquipe);
+        Element element = document.select(itemHtml).first();
+        if (element == null) {
+            return 0;
+        }
+        return formataPlacarStringInteger(element.text());
     }
 
     public String recuperaGolsEquipe(Document document, String itemHtml) {
         List<String> golsEquipe = new ArrayList<>();
-        Elements timeCasa = document.select(itemHtml).select(ScrapingConstants.ITEM_GOLS);
+        Element container = document.select(itemHtml).first();
+        if (container == null) {
+            return null;
+        }
+        Elements timeCasa = container.select(ScrapingConstants.ITEM_GOLS);
         for (Element e : timeCasa) {
             String infoGol = e.select(ScrapingConstants.ITEM_GOLS).text();
             golsEquipe.add(infoGol);

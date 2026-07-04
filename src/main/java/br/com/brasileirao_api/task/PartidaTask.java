@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Configuration
 @EnableScheduling
@@ -30,7 +30,7 @@ public class PartidaTask {
 
     private void inicializaAgendamento(String descricaoTarefa) {
         gravaLogInfo(String.format("Inicializando agendamento: %s em %s",
-                descricaoTarefa, DataUtil.formatarDateEmString(new Date(), DD_MM_YY)));
+                descricaoTarefa, DataUtil.formatarDateEmString(LocalDate.now(), DD_MM_YY)));
     }
 
     private void gravaLogInfo(String mensagem) {

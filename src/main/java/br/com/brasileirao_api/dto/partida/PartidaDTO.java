@@ -1,7 +1,6 @@
 package br.com.brasileirao_api.dto.partida;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -9,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -17,7 +16,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class PartidaDTO {
 
-    private static  final long seralVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     @NotBlank
     private String nomeEquipeCasa;
@@ -28,9 +27,7 @@ public class PartidaDTO {
     @NotBlank
     private String localPartida;
 
-    @ApiModelProperty(example = "dd/MM/yyyy")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone = "America/Sao_Paulo")
-    private Date dataHoraPartida;
-
-
+    @Schema(example = "yyyy-MM-dd")
+    @NotNull
+    private LocalDate dataHoraPartida;
 }
