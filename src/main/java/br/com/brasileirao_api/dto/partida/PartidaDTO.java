@@ -19,6 +19,9 @@ public class PartidaDTO {
     private static final long serialVersionUID = 1L;
 
     @NotBlank
+    private String campeonato;
+
+    @NotBlank
     private String nomeEquipeCasa;
 
     @NotBlank

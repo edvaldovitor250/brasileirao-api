@@ -19,4 +19,20 @@ public interface PartidaRepository extends JpaRepository<Partida, Long> {
             + "and coalesce(p.tempo_partida, 'Vazio') != 'Encerrado' ",
             nativeQuery = true)
     List<Partida> listarPartidasPeriodo();
+
+    List<Partida> findByCampeonato(String campeonato);
+
+    @Query(value = "select count(*) from partida as p "
+            + "where p.campeonato = :campeonato "
+            + "and p.data_hora_partida between dateadd(hour, -3, current_timestamp) and current_timestamp "
+            + "and coalesce(p.tempo_partida, 'Vazio') != 'Encerrado' ",
+            nativeQuery = true)
+    Integer buscarQuantidadePartidasPeriodoPorCampeonato(String campeonato);
+
+    @Query(value = "select * from partida as p "
+            + "where p.campeonato = :campeonato "
+            + "and p.data_hora_partida between dateadd(hour, -3, current_timestamp) and current_timestamp "
+            + "and coalesce(p.tempo_partida, 'Vazio') != 'Encerrado' ",
+            nativeQuery = true)
+    List<Partida> listarPartidasPeriodoPorCampeonato(String campeonato);
 }

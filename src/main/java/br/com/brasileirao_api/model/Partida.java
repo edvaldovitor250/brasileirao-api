@@ -28,6 +28,9 @@ public class Partida implements Serializable {
     @Transient
     private String statusPartida;
 
+    @Column(name = "campeonato")
+    private String campeonato;
+
     @ManyToOne
     @JoinColumn(name = "equipe_casa_id")
     private Equipe equipeCasa;

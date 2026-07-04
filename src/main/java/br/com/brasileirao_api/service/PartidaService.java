@@ -37,8 +37,15 @@ public class PartidaService {
         return partidas;
     }
 
+    public PartidaResponseDTO listarPartidasPorCampeonato(String campeonato) {
+        logger.info("Listando partidas do campeonato: {}", campeonato);
+        PartidaResponseDTO partidas = new PartidaResponseDTO();
+        partidas.setPartidas(partidaRepository.findByCampeonato(campeonato));
+        return partidas;
+    }
+
     public Partida inserirPartida(PartidaDTO dto) {
-        logger.info("Inserindo nova partida");
+        logger.info("Inserindo nova partida do campeonato: {}", dto.getCampeonato());
         Partida partida = modelMapper.map(dto, Partida.class);
         partida.setEquipeCasa(equipeService.buscarEquipeNome(dto.getNomeEquipeCasa()));
         partida.setEquipeVisitante(equipeService.buscarEquipeNome(dto.getNomeEquipeVisitante()));
@@ -48,10 +55,11 @@ public class PartidaService {
     public void alterarPartida(Long id, PartidaDTO dto) {
         logger.info("Alterando partida com ID: {}", id);
         if (!partidaRepository.existsById(id)) {
-            throw new NotFoundException("Não foi possível atualizar a partida: ID inexistente");
+            throw new NotFoundException("Nao foi possivel atualizar a partida: ID inexistente");
         }
 
         Partida partida = buscarPartidaPorId(id);
+        partida.setCampeonato(dto.getCampeonato());
         partida.setEquipeCasa(equipeService.buscarEquipeNome(dto.getNomeEquipeCasa()));
         partida.setEquipeVisitante(equipeService.buscarEquipeNome(dto.getNomeEquipeVisitante()));
         partida.setDataHoraPartida(dto.getDataHoraPartida());
@@ -61,10 +69,9 @@ public class PartidaService {
     }
 
     private Partida salvarPartida(Partida partida) {
-        logger.info("Salvando partida no repositório");
+        logger.info("Salvando partida no repositorio");
         return partidaRepository.save(partida);
     }
-
 
     public void atualizaPartida(Partida partida, PartidaGoogleDTO partidaGoogle) {
         partida.setPlacarEquipeCasa(partidaGoogle.getPlacarEquipeCasa());
@@ -82,7 +89,15 @@ public class PartidaService {
         return partidaRepository.listarPartidasPeriodo();
     }
 
+    public List<Partida> listarPartidasPeriodoPorCampeonato(String campeonato) {
+        return partidaRepository.listarPartidasPeriodoPorCampeonato(campeonato);
+    }
+
     public Integer buscarQuantidadePartidasPeriodo() {
-        return  partidaRepository.buscarQuantidadePartidasPeriodo();
+        return partidaRepository.buscarQuantidadePartidasPeriodo();
+    }
+
+    public Integer buscarQuantidadePartidasPeriodoPorCampeonato(String campeonato) {
+        return partidaRepository.buscarQuantidadePartidasPeriodoPorCampeonato(campeonato);
     }
 }
